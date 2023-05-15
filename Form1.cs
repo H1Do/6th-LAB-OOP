@@ -36,6 +36,28 @@ namespace _6th_LAB_OOP
             shares.pushBack(circle);
         }
 
+        private void NewTriangle(int x, int y)
+        {
+            designer.UnselectAll(shares);
+            designer.DrawAll(shares);
+
+            CTriangle triangle = new CTriangle(x, y, designer);
+            triangle.Draw();
+            pictureBox.Image = designer.GetBitmap();
+            shares.pushBack(triangle);
+        }
+
+        private void NewSquare(int x, int y)
+        {
+            designer.UnselectAll(shares);
+            designer.DrawAll(shares);
+
+            CSquare square = new CSquare(x, y, designer);
+            square.Draw();
+            pictureBox.Image= designer.GetBitmap();
+            shares.pushBack(square);
+        }
+
         private void pictureBox_MouseUp(object sender, MouseEventArgs e)
         {
             designer.Clear();

@@ -29,47 +29,23 @@
         private void InitializeComponent()
         {
             this.pictureBox = new System.Windows.Forms.PictureBox();
-            this.isCtrlCheckBox = new System.Windows.Forms.CheckBox();
-            this.isCrossSelectCheckBox = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
             this.SuspendLayout();
             // 
             // pictureBox
             // 
-            this.pictureBox.Location = new System.Drawing.Point(3, 0);
+            this.pictureBox.Location = new System.Drawing.Point(0, 0);
             this.pictureBox.Name = "pictureBox";
-            this.pictureBox.Size = new System.Drawing.Size(801, 415);
+            this.pictureBox.Size = new System.Drawing.Size(801, 501);
             this.pictureBox.TabIndex = 0;
             this.pictureBox.TabStop = false;
             this.pictureBox.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pictureBox_MouseUp);
-            // 
-            // isCtrlCheckBox
-            // 
-            this.isCtrlCheckBox.AutoSize = true;
-            this.isCtrlCheckBox.Location = new System.Drawing.Point(13, 421);
-            this.isCtrlCheckBox.Name = "isCtrlCheckBox";
-            this.isCtrlCheckBox.Size = new System.Drawing.Size(54, 17);
-            this.isCtrlCheckBox.TabIndex = 1;
-            this.isCtrlCheckBox.Text = "CTRL";
-            this.isCtrlCheckBox.UseVisualStyleBackColor = true;
-            // 
-            // isCrossSelectCheckBox
-            // 
-            this.isCrossSelectCheckBox.AutoSize = true;
-            this.isCrossSelectCheckBox.Location = new System.Drawing.Point(100, 421);
-            this.isCrossSelectCheckBox.Name = "isCrossSelectCheckBox";
-            this.isCrossSelectCheckBox.Size = new System.Drawing.Size(158, 17);
-            this.isCrossSelectCheckBox.TabIndex = 2;
-            this.isCrossSelectCheckBox.Text = "Перекрестное выделение";
-            this.isCrossSelectCheckBox.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.isCrossSelectCheckBox);
-            this.Controls.Add(this.isCtrlCheckBox);
+            this.ClientSize = new System.Drawing.Size(800, 529);
             this.Controls.Add(this.pictureBox);
             this.KeyPreview = true;
             this.Name = "Form1";
@@ -79,15 +55,12 @@
             this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyUp);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).EndInit();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
         #endregion
 
         private System.Windows.Forms.PictureBox pictureBox;
-        private System.Windows.Forms.CheckBox isCtrlCheckBox;
-        private System.Windows.Forms.CheckBox isCrossSelectCheckBox;
     }
 }
 

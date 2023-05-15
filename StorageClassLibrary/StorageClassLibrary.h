@@ -6,7 +6,6 @@ namespace StorageClassLibrary {
 	public ref class CShape
 	{
 	protected: 
-		int x, y;
 		bool is_selected;
 		String^ color;
 
@@ -17,7 +16,7 @@ namespace StorageClassLibrary {
 		virtual bool IsSelected() { return is_selected; }
 		virtual void ChangeColor(String^ color) { this->color = color; }
 
-		virtual void ChangeSize(String^ type) = 0;
+		virtual void ChangeSize(char type) = 0;
 		virtual bool WasClicked(int x, int y) = 0;
 		virtual void Draw() = 0;
 		virtual void Move(char direction) = 0;
