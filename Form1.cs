@@ -7,12 +7,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using StorageClassLibrary;
 
 namespace _6th_LAB_OOP
 {
     public partial class Form1 : Form
     {
-        List<CCircle> circles;
+        Storage shares;
         Designer designer;
 
         bool is_ctrl_pressed = false;
@@ -20,19 +21,19 @@ namespace _6th_LAB_OOP
         public Form1()
         {
             InitializeComponent();
-            circles = new List<CCircle>();
+            shares = new Storage();
             designer = new Designer(pictureBox.Width, pictureBox.Height);
         }
 
         private void NewCircle(int x, int y)
         {
-            designer.UnselectAll(circles);
-            designer.DrawAll(circles);
+            designer.UnselectAll(shares);
+            designer.DrawAll(shares);
 
-            CCircle circle = new CCircle(x, y);
-            circle.DrawCircle(designer);
+            CCircle circle = new CCircle(x, y, designer);
+            circle.Draw();
             pictureBox.Image = designer.GetBitmap();
-            circles.Add(circle);
+            shares.pushBack(circle);
         }
 
         private void pictureBox_MouseUp(object sender, MouseEventArgs e)
@@ -91,114 +92,6 @@ namespace _6th_LAB_OOP
                 is_ctrl_pressed = false;
                 isCtrlCheckBox.Checked = false;
             }
-        }
-    }
-    public class Designer // Класс, отвечающий за отрисовку и получения изображения в bitmap (растровое изображение)
-    {
-        private Bitmap bitmap; // Растровое изображение
-        private Pen blackPen; // Ручка для рисования черным цветом
-        private Pen redPen; // Ручка для рисования черным цветом
-        private Graphics g; // Класс, предоставляющий методы для рисования объектов
-
-        public Designer(int width, int height) // Конструктор
-        {
-            bitmap = new Bitmap(width, height); // Определяем растровое изображение
-            g = Graphics.FromImage(bitmap); // Определяем класс, отвечающий за рисование
-            blackPen = new Pen(Color.Black); blackPen.Width = 2; // Определяем черную ручку
-            redPen = new Pen(Color.Red); redPen.Width = 2; // Определяем красную ручку
-        }
-
-        public Bitmap GetBitmap() // Получить растровое изображение 
-        {
-            return bitmap;
-        }
-
-        public void Clear() // Очистить изображение
-        {
-            g.Clear(Color.White);
-        }
-
-        public void DrawCircle(int x, int y, int radius) // Нарисовать окружность (черного цвета)
-        {
-            g.DrawEllipse(blackPen, (x - radius), (y - radius), 2 * radius, 2 * radius);
-        }
-
-        public void DrawSelectedCircle(int x, int y, int radius) // Нарисовать выделенную окружность (красного цвета)
-        {
-            g.DrawEllipse(redPen, (x - radius), (y - radius), 2 * radius, 2 * radius);
-        }
-
-        public void DrawAll(List<CCircle> circles) // Отрисовать всех окружности
-        {
-            foreach (CCircle current_circle in circles)
-                current_circle.DrawCircle(this);
-        }
-
-        public void UnselectAll(List<CCircle> circles) // Убираем подчеркивание со всех окружностей
-        {
-            foreach (CCircle current_circle in circles)
-                current_circle.Unselect();
-        }
-
-        public bool SelectCircleByCoord(List<CCircle> circles, int x, int y, bool is_single) // Выделяем окружность (окружности) попавшуюся (попавшиеся) по координатам
-        {
-            bool was_clicked = false;
-            foreach (CCircle circle in circles) // Ищем окружность, на который мы попали (если вообще попали)
-            {
-                if (circle.WasClicked(x, y))
-                {
-                    was_clicked = true;
-                    circle.Select(); // Выделяем окружность
-
-                    if (is_single) return true; // Если перекрестное выделение не выбрано, то останавливаемся на выделении одной окружности
-                }
-            }
-            return was_clicked; // На выходе передаём успешность выделения
-        }
-    }
-    public class CCircle
-    {
-        private int x, y, radius; // Параметры окружности
-        private bool is_selected; // Параметр указывающий на выделенность окружности
-
-        public CCircle(int x, int y) // Конструктор окружности 
-        {
-            this.x = x;
-            this.y = y;
-            radius = 33;
-        }
-
-        public CCircle(CCircle obj) // Констуктор копирования
-        {
-            this.x = obj.x;
-            this.y = obj.y;
-            this.radius = obj.radius;
-        }
-
-        public void Select() // Выделяем окружность
-        {
-            is_selected = true;
-        }
-
-        public void Unselect() // Убираем выделенность окружности
-        {
-            is_selected = false;
-        }
-
-        public bool IsSelected() // Запрашиваем выделенность окружности
-        {
-            return is_selected;
-        }
-
-        public void DrawCircle(Designer designer) // Отрисовать окружность с помощью класса, отв. за рисование
-        {
-            if (IsSelected()) designer.DrawSelectedCircle(x, y, radius);
-            else designer.DrawCircle(x, y, radius);
-        }
-
-        public bool WasClicked(int coordX, int coordY) // Запрашиваем у окружности, попала ли она во входные координаты
-        {
-            return (Math.Pow(x - coordX, 2) + Math.Pow(y - coordY, 2) <= radius * radius);
         }
     }
 }
