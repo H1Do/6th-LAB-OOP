@@ -2,222 +2,207 @@
 using namespace System;
 
 namespace StorageClassLibrary {
-	public ref class CShape
+public ref class CShape {
+protected:
+	bool is_selected;
+	String^ color;
+
+public:
+	~CShape() { }
+	virtual void Select() { is_selected = true; }
+	virtual void Unselect() { is_selected = false; }
+	virtual bool IsSelected() { return is_selected; }
+	virtual void ChangeColor(String^ color) { this->color = color; }
+
+	virtual void ChangeSize(char type) = 0;
+	virtual bool WasClicked(int x, int y) = 0;
+	virtual void Draw() = 0;
+	virtual void Move(char direction) = 0;
+	virtual bool CanMove(char direction) = 0;
+};
+
+/*public ref class Node {
+public:
+    CShape^ data;
+    Node^ next;
+};
+
+public ref class Storage {
+private:
+    Node^ head;
+    Node^ current;
+
+public:
+    Storage() {
+        head = nullptr;
+        current = nullptr;
+    }
+
+    bool isEmpty() {
+        return head == nullptr;
+    }
+
+    void add(CShape^ shape) {
+        Node^ node = gcnew Node();
+        node->data = shape;
+        node->next = nullptr;
+
+        if (isEmpty()) {
+            head = node;
+        }
+        else {
+            Node^ current = head;
+
+            while (current->next != nullptr) {
+                current = current->next;
+            }
+
+            current->next = node;
+        }
+    }
+
+    void clear() {
+        while (!isEmpty()) {
+            removeCurrent();
+        }
+    }
+
+    void first() {
+        current = head;
+    }
+
+    bool isLast() {
+        if (isEmpty() || current == nullptr) {
+            return false;
+        }
+
+        return current->next == nullptr;
+    }
+
+    void next() {
+        if (current != nullptr) {
+            current = current->next;
+        }
+    }
+
+    CShape^ getCurrent() {
+        if (current != nullptr) {
+            return current->data;
+        }
+        return nullptr;
+    }
+
+    void removeCurrent() {
+        if (isEmpty() || current == nullptr) {
+            return;
+        }
+
+        if (current == head) {
+            head = head->next;
+            delete current;
+            current = head;
+            return;
+        }
+
+        Node^ prev = head;
+        while (prev != nullptr && prev->next != current) {
+            prev = prev->next;
+        }
+
+        if (prev == nullptr) {
+            return;
+        }
+
+        prev->next = current->next;
+        delete current;
+        current = prev->next;
+    }
+};*/
+
+public ref class IList
 	{
-	protected:
-		bool is_selected;
-		String^ color;
-
 	public:
-		~CShape() { }
-		virtual void Select() { is_selected = true; }
-		virtual void Unselect() { is_selected = false; }
-		virtual bool IsSelected() { return is_selected; }
-		virtual void ChangeColor(String^ color) { this->color = color; }
-
-		virtual void ChangeSize(char type) = 0;
-		virtual bool WasClicked(int x, int y) = 0;
-		virtual void Draw() = 0;
-		virtual void Move(char direction) = 0;
-		virtual bool CanMove(char direction) = 0;
+		virtual void add(CShape^ obj) = 0;
+		virtual void del(CShape^ obj) = 0;
+		virtual CShape^ getObject() = 0;
+		virtual void first() = 0;
+		virtual void next() = 0;
+		virtual bool isEOL() = 0;
 	};
 
-	public ref class Storage {
-	private:
-		ref class Node {
-		public:
-			Node^ next;
-			CShape^ value;
+	public ref class MyStorage : public IList {
 
-			Node(CShape^ value) : value(value), next(nullptr) { }
-			~Node() { }
-			CShape^ getValue() { return value; }
-		};
+	protected:
 
-		Node^ first, ^ last, ^ current;
-		size_t size, position;
+		array<CShape^>^ data;
+		int curr, size, count;
+
+		void resize() {
+
+			size++;
+
+			array<CShape^>^ tmp = gcnew array<CShape^>(size);
+
+			for (int i = 0; i < size - 1; i++)
+				tmp[i] = data[i];
+
+			data = tmp;
+		}
 
 	public:
-		// Конструктор
-		Storage() : first(nullptr), last(nullptr), size(0) { }
 
-		~Storage() {
-			while (first && size) {
-				removeFront();
-			}
+		MyStorage() {
+			curr = 0; size = 0; count = 0;
+			data = gcnew array<CShape^>(size);
 		}
 
-		bool isEmpty() {
-			return first == nullptr;
-		}
+		void add(CShape^ obj) override {
 
-		// Получаем размер списка
-		size_t getSize() {
-			return size;
-		}
+			if (this->isEOL())
+			{
+				if (count < curr) {
+					for (int i = 0; i < size; i++)
+						if (data[i] == nullptr) {
+							data[i] = obj;
+							count++;
+							return;
+						}
+				}
 
-		void setFirst() {
-			position = 0;
-		}
-
-		bool isLast() {
-			return current == last;
-		}
-
-		void next() {
-			current = current->next;
-			position += 1;
-		}
-
-		CShape^ getCurrent() {
-			return ((current->getValue()) ? (current->getValue()) : nullptr);
-		}
-
-		void deleteCurrent() {
-			popNth(position);
-		}
-
-		// Вставка в конец
-		void pushBack(CShape^ value) {
-			Node^ newNode = gcnew Node(value);
-			if (isEmpty()) {
-				first = last = newNode;
-			}
-			else {
-				last->next = newNode;
-				last = newNode;
-			}
-			size++;
-		}
-
-		// Вставка в начало
-		void pushFront(CShape^ value) {
-			Node^ newNode = gcnew Node(value);
-			if (isEmpty()) {
-				first = last = newNode;
-			}
-			else {
-				newNode->next = first;
-				first = newNode;
-			}
-			size++;
-		}
-
-		// Вставка по n-ому индексу
-		void pushNth(size_t position, CShape^ value) {
-			if (position == 0) {
-				pushFront(value);
-				return;
-			}
-			else if (position == size - 1) {
-				pushBack(value);
-				return;
-			}
-			else if (position > size - 1) {
-				return;
+				this->resize();
 			}
 
-			Node^ newNode = gcnew Node(value);
-			Node^ temp = first;
-
-			for (size_t i = 1; i < position; i++) {
-				temp = temp->next;
+			while (data[curr] != nullptr) {
+				curr++;
+				if (this->isEOL())
+					this->resize();
 			}
 
-			newNode->next = temp->next;
-			temp->next = newNode;
-			size++;
+			data[curr] = obj;
+			curr++;
+			count++;
 		}
 
-		// Возврат первого элемента
-		CShape^ getFront() {
-			return first->value;
+		void del(CShape^ obj) override {
+			delete obj;
+			data[curr] = nullptr;
+			count--;
 		}
 
-		// Возврат последнего элемента
-		CShape^ getBack() {
-			return last->value;
+		CShape^ getObject() override {
+			return data[curr];
 		}
 
-		// Возврат n-ного элемента
-		CShape^ getNth(size_t position) {
-			Node^ result = first;
-			for (int i = 0; i < position; i++) {
-				result = result->next;
-			}
-			return result->value;
+		void first() override {
+			curr = 0;
 		}
 
-		// Просто удаление без возврата первого элемента
-		void removeFront() {
-			if (!first) return;
-			Node^ temp = first->next;
-			delete first;
-			first = temp;
-			size--;
+		void next() override {
+			curr++;
 		}
 
-		// Возврат первого элемента с его удалением
-		CShape^ popFront() {
-			CShape^ result = first->value;
-			Node^ temp = first->next;
-
-			delete first;
-			first = temp;
-			size--;
-			return result;
-		}
-
-
-		// Возврат последнего элемента с его удалением
-		CShape^ popBack() {
-			CShape^ result = last->value;
-			Node^ temp = first;
-			while (temp->next != last) {
-				temp = temp->next;
-			}
-			delete last;
-			last = temp;
-			size--;
-			return result;
-		}
-
-		// Возврат n-ного элемента с его удалением
-		CShape^ popNth(size_t position) {
-			if (position == 0) {
-				return popFront();
-			}
-			else if (position == size - 1) {
-				return popBack();
-			}
-			else if (position > size - 1) {
-				return nullptr;
-			}
-
-			Node^ temp = first, ^ prev = nullptr;
-			for (int i = 0; i < position; i++) {
-				prev = temp;
-				temp = temp->next;
-			}
-			CShape^ result = temp->value;
-			prev->next = temp->next;
-			delete temp;
-
-			size--;
-			return result;
-		}
-
-		// Проверка на наличие
-		bool isContain(const CShape^ value) {
-			Node^ temp = first;
-			while (temp != last) {
-				if (temp->value == value)
-					return true;
-				temp = temp->next;
-			}
-			if (temp->value == value)
-				return true;
-			return false;
+		bool isEOL() override {
+			return curr > size - 1;
 		}
 	};
 }
