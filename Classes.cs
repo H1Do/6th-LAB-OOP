@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,39 +13,39 @@ using System.Runtime.InteropServices.ComTypes;
 
 namespace _6th_LAB_OOP
 {
-    public class Designer // Класс, отвечающий за отрисовку и получения изображения в bitmap (растровое изображение)
+    public class Designer // РљР»Р°СЃСЃ, РѕС‚РІРµС‡Р°СЋС‰РёР№ Р·Р° РѕС‚СЂРёСЃРѕРІРєСѓ Рё РїРѕР»СѓС‡РµРЅРёСЏ РёР·РѕР±СЂР°Р¶РµРЅРёСЏ РІ bitmap (СЂР°СЃС‚СЂРѕРІРѕРµ РёР·РѕР±СЂР°Р¶РµРЅРёРµ)
     {
-        private Bitmap bitmap; // Растровое изображение
-        private Pen blackPen; // Ручка для рисования черным цветом
-        private Pen redPen; // Ручка для рисования черным цветом
-        private Brush brush; // Кисточка для заливки фигур цветом
-        private Graphics g; // Класс, предоставляющий методы для рисования объектов
-        private int height, width; // Храним высоту и ширину изображения
+        private Bitmap bitmap; // Р Р°СЃС‚СЂРѕРІРѕРµ РёР·РѕР±СЂР°Р¶РµРЅРёРµ
+        private Pen blackPen; // Р СѓС‡РєР° РґР»СЏ СЂРёСЃРѕРІР°РЅРёСЏ С‡РµСЂРЅС‹Рј С†РІРµС‚РѕРј
+        private Pen redPen; // Р СѓС‡РєР° РґР»СЏ СЂРёСЃРѕРІР°РЅРёСЏ С‡РµСЂРЅС‹Рј С†РІРµС‚РѕРј
+        private Brush brush; // РљРёСЃС‚РѕС‡РєР° РґР»СЏ Р·Р°Р»РёРІРєРё С„РёРіСѓСЂ С†РІРµС‚РѕРј
+        private Graphics g; // РљР»Р°СЃСЃ, РїСЂРµРґРѕСЃС‚Р°РІР»СЏСЋС‰РёР№ РјРµС‚РѕРґС‹ РґР»СЏ СЂРёСЃРѕРІР°РЅРёСЏ РѕР±СЉРµРєС‚РѕРІ
+        private int height, width; // РҐСЂР°РЅРёРј РІС‹СЃРѕС‚Сѓ Рё С€РёСЂРёРЅСѓ РёР·РѕР±СЂР°Р¶РµРЅРёСЏ
 
-        public Designer(int width, int height) // Конструктор
+        public Designer(int width, int height) // РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
         {
-            this.width = width; this.height = height; // Будет нужно для ограничения в движении фигур
-            bitmap = new Bitmap(width, height); // Определяем растровое изображение
-            g = Graphics.FromImage(bitmap); // Определяем класс, отвечающий за рисование
-            blackPen = new Pen(Color.Black); blackPen.Width = 2; // Определяем черную ручку
-            redPen = new Pen(Color.Red); redPen.Width = 2; // Определяем красную ручку
+            this.width = width; this.height = height; // Р‘СѓРґРµС‚ РЅСѓР¶РЅРѕ РґР»СЏ РѕРіСЂР°РЅРёС‡РµРЅРёСЏ РІ РґРІРёР¶РµРЅРёРё С„РёРіСѓСЂ
+            bitmap = new Bitmap(width, height); // РћРїСЂРµРґРµР»СЏРµРј СЂР°СЃС‚СЂРѕРІРѕРµ РёР·РѕР±СЂР°Р¶РµРЅРёРµ
+            g = Graphics.FromImage(bitmap); // РћРїСЂРµРґРµР»СЏРµРј РєР»Р°СЃСЃ, РѕС‚РІРµС‡Р°СЋС‰РёР№ Р·Р° СЂРёСЃРѕРІР°РЅРёРµ
+            blackPen = new Pen(Color.Black); blackPen.Width = 2; // РћРїСЂРµРґРµР»СЏРµРј С‡РµСЂРЅСѓСЋ СЂСѓС‡РєСѓ
+            redPen = new Pen(Color.Red); redPen.Width = 2; // РћРїСЂРµРґРµР»СЏРµРј РєСЂР°СЃРЅСѓСЋ СЂСѓС‡РєСѓ
         }
-        
+
         public int getHeight() { return height; }
 
         public int getWidth() { return width; }
 
-        public Bitmap GetBitmap() // Получить растровое изображение 
+        public Bitmap GetBitmap() // РџРѕР»СѓС‡РёС‚СЊ СЂР°СЃС‚СЂРѕРІРѕРµ РёР·РѕР±СЂР°Р¶РµРЅРёРµ 
         {
             return bitmap;
         }
 
-        public void Clear() // Очистить изображение
+        public void Clear() // РћС‡РёСЃС‚РёС‚СЊ РёР·РѕР±СЂР°Р¶РµРЅРёРµ
         {
             g.Clear(Color.White);
         }
 
-        public void DrawCircle(int x, int y, int radius, bool is_selected, string color) // Нарисовать окружность 
+        public void DrawCircle(int x, int y, int radius, bool is_selected, string color) // РќР°СЂРёСЃРѕРІР°С‚СЊ РѕРєСЂСѓР¶РЅРѕСЃС‚СЊ 
         {
             g.DrawEllipse(((is_selected) ? redPen : blackPen), (x - radius), (y - radius), 2 * radius, 2 * radius);
             brush = new SolidBrush(Color.FromName(color));
@@ -53,7 +53,7 @@ namespace _6th_LAB_OOP
             brush.Dispose();
         }
 
-        public void DrawTriangle(Point[] points, bool is_selected, string color) // Нарисовать треугольник
+        public void DrawTriangle(Point[] points, bool is_selected, string color) // РќР°СЂРёСЃРѕРІР°С‚СЊ С‚СЂРµСѓРіРѕР»СЊРЅРёРє
         {
             g.DrawPolygon(((is_selected) ? redPen : blackPen), points);
             brush = new SolidBrush(Color.FromName(color));
@@ -61,7 +61,7 @@ namespace _6th_LAB_OOP
             brush.Dispose();
         }
 
-        public void DrawSquare(int x, int y, int length, bool is_selected, string color) // Нарисовать квадрат
+        public void DrawSquare(int x, int y, int length, bool is_selected, string color) // РќР°СЂРёСЃРѕРІР°С‚СЊ РєРІР°РґСЂР°С‚
         {
             g.DrawRectangle(((is_selected) ? redPen : blackPen), x, y, length, length);
             brush = new SolidBrush(Color.FromName(color));
@@ -69,33 +69,34 @@ namespace _6th_LAB_OOP
             brush.Dispose();
         }
 
-        public void DrawLine(Point point1, Point point2, bool is_selected, string color) // Нарисовать линию
+        public void DrawLine(Point point1, Point point2, bool is_selected, string color) // РќР°СЂРёСЃРѕРІР°С‚СЊ Р»РёРЅРёСЋ
         {
             Pen current_color_pen = new Pen(Color.FromName(color));
             g.DrawLine(((is_selected) ? redPen : current_color_pen), point1, point2);
         }
 
-        public void DrawAll(Storage storage) // Отрисовать всех фигуры
+        public void DrawAll(Storage storage) // РћС‚СЂРёСЃРѕРІР°С‚СЊ РІСЃРµС… С„РёРіСѓСЂС‹
         {
-            for (storage.setFirst();  storage.isLast(); storage.next())
+            if (storage.isEmpty()) return;
+            for (storage.setFirst(); storage.isLast(); storage.next())
                 storage.getCurrent().Draw();
         }
 
-        public void UnselectAll(Storage storage) // Убираем подчеркивание со всех окружностей
+        public void UnselectAll(Storage storage) // РЈР±РёСЂР°РµРј РїРѕРґС‡РµСЂРєРёРІР°РЅРёРµ СЃРѕ РІСЃРµС… РѕРєСЂСѓР¶РЅРѕСЃС‚РµР№
         {
             for (storage.setFirst(); storage.isLast(); storage.next())
                 storage.getCurrent().Unselect();
         }
 
-        public Point MoveFigure(int x, int y, sbyte direction)
+        public Point MoveFigure(int x, int y, sbyte direction) // РџРµСЂРµРјРµС‰РµРЅРёРµ С„РёРіСѓСЂС‹
         {
-            if (direction == 'u') // вверх
+            if (direction == 'u') // РІРІРµСЂС…
                 y = y - 5;
-            else if (direction == 'd') // вниз
+            else if (direction == 'd') // РІРЅРёР·
                 y = y + 5;
-            else if (direction == 'r') // вправо
+            else if (direction == 'r') // РІРїСЂР°РІРѕ
                 x = x + 5;
-            else if (direction == 'l') // влево
+            else if (direction == 'l') // РІР»РµРІРѕ
                 x = x - 5;
 
             return new Point(x, y);
@@ -109,7 +110,7 @@ namespace _6th_LAB_OOP
         private Point[] bound_points = new Point[4];
         private Designer designer;
 
-        public CCircle(int x, int y, Designer designer) // Конструктор окружности 
+        public CCircle(int x, int y, Designer designer) // РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ РѕРєСЂСѓР¶РЅРѕСЃС‚Рё 
         {
             this.center_point.X = x;
             this.center_point.Y = y;
@@ -170,10 +171,11 @@ namespace _6th_LAB_OOP
         private Point[] points = new Point[3];
         private Designer designer;
 
-        public CTriangle(int x, int y, Designer designer) {
-            points[0].X = x; points[0].Y = y - 35; // Верхняя точка
-            points[1].X = x - 35; points[1].Y = y + 25; // Левая точка
-            points[2].X = x + 35; points[2].Y = y + 25; // Правая точка
+        public CTriangle(int x, int y, Designer designer)
+        {
+            points[0].X = x; points[0].Y = y - 35; // Р’РµСЂС…РЅСЏСЏ С‚РѕС‡РєР°
+            points[1].X = x - 35; points[1].Y = y + 25; // Р›РµРІР°СЏ С‚РѕС‡РєР°
+            points[2].X = x + 35; points[2].Y = y + 25; // РџСЂР°РІР°СЏ С‚РѕС‡РєР°
 
             this.designer = designer;
         }

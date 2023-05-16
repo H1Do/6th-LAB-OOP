@@ -1,11 +1,10 @@
 ﻿#pragma once
-
 using namespace System;
 
 namespace StorageClassLibrary {
 	public ref class CShape
 	{
-	protected: 
+	protected:
 		bool is_selected;
 		String^ color;
 
@@ -22,9 +21,9 @@ namespace StorageClassLibrary {
 		virtual void Move(char direction) = 0;
 		virtual bool CanMove(char direction) = 0;
 	};
-	
+
 	public ref class Storage {
-	protected:
+	private:
 		ref class Node {
 		public:
 			Node^ next;
@@ -41,6 +40,7 @@ namespace StorageClassLibrary {
 	public:
 		// Конструктор
 		Storage() : first(nullptr), last(nullptr), size(0) { }
+
 		~Storage() {
 			while (first && size) {
 				removeFront();
@@ -70,7 +70,7 @@ namespace StorageClassLibrary {
 		}
 
 		CShape^ getCurrent() {
-			return current->getValue();
+			return ((current->getValue()) ? (current->getValue()) : nullptr);
 		}
 
 		void deleteCurrent() {

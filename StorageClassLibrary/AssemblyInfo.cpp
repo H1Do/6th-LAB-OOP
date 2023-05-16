@@ -6,12 +6,12 @@ using namespace System::Runtime::CompilerServices;
 using namespace System::Runtime::InteropServices;
 using namespace System::Security::Permissions;
 
-[assembly:AssemblyTitleAttribute(L"StorageClassLibrary")];
+[assembly:AssemblyTitleAttribute(L"ClassLibraryStorage")];
 [assembly:AssemblyDescriptionAttribute(L"")];
 [assembly:AssemblyConfigurationAttribute(L"")];
-[assembly:AssemblyCompanyAttribute(L"")];
-[assembly:AssemblyProductAttribute(L"StorageClassLibrary")];
-[assembly:AssemblyCopyrightAttribute(L"(c)  2023")];
+[assembly:AssemblyCompanyAttribute(L"HP")];
+[assembly:AssemblyProductAttribute(L"ClassLibraryStorage")];
+[assembly:AssemblyCopyrightAttribute(L"(c) HP 2022")];
 [assembly:AssemblyTrademarkAttribute(L"")];
 [assembly:AssemblyCultureAttribute(L"")];
 
