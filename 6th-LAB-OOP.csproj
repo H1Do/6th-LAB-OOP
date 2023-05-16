@@ -73,9 +73,8 @@
     <StartupObject>_6th_LAB_OOP.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ClassLibrary_Storage, Version=1.0.8060.23054, Culture=neutral, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>ClassLibrary_Storage\x64\Debug\ClassLibrary_Storage.dll</HintPath>
+    <Reference Include="StorageClassLibrary">
+      <HintPath>StorageClassLibrary\x64\Debug\StorageClassLibrary.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
