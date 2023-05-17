@@ -94,6 +94,7 @@ namespace _6th_LAB_OOP
 
         private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
+            int dx = 0, dy = 0;
             switch (e.KeyCode)
             {
                 case Keys.ControlKey: // Если это CTRL, то мы это запоминаем и выходим
@@ -108,26 +109,23 @@ namespace _6th_LAB_OOP
                         shapes.Remove(order_to_delete.Get(i));
                     break;
                 case Keys.Up: // Если это Up, то все выделенные фигуры движутся наверх
-                    for (int i = 0; i < shapes.GetSize(); i++)
-                        if (shapes.Get(i).IsSelected())
-                            shapes.Get(i).Move((sbyte)'u');
+                    dx = 0; dy = -5;
                     break;
                 case Keys.Down: // Если это Down, то все выделенные фигуры движутся вниз
-                    for (int i = 0; i < shapes.GetSize(); i++)
-                        if (shapes.Get(i).IsSelected())
-                            shapes.Get(i).Move((sbyte)'d');
+                    dx = 0; dy = 5;
                     break;
                 case Keys.Left: // Если это Left, то все выделенные фигуры движутся влево
-                    for (int i = 0; i < shapes.GetSize(); i++)
-                        if (shapes.Get(i).IsSelected())
-                            shapes.Get(i).Move((sbyte)'l');
+                    dx = -5; dy = 0;
                     break;
                 case Keys.Right: // Если это Right, то все выделенные фигуры движутся вправо
-                    for (int i = 0; i < shapes.GetSize(); i++)
-                        if (shapes.Get(i).IsSelected())
-                            shapes.Get(i).Move((sbyte)'r');
+                    dx = 5; dy = 0;
                     break; 
             }
+            if (dx != 0 || dy != 0)
+                for (int i = 0; i < shapes.GetSize(); i++)
+                    if (shapes.Get(i).IsSelected())
+                        shapes.Get(i).Move(dx, dy);
+
 
             designer.Clear(); // Очищаем изображение, отрисовываем все окружности и передаём изобажение pictureBox'у
             designer.DrawAll(shapes);

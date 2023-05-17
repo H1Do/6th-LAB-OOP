@@ -36,7 +36,7 @@ namespace _6th_LAB_OOP
 
         public int getWidth() { return width; }
 
-        public Bitmap GetBitmap() // Получить растровое изображение 
+        public Bitmap GetBitmap() // Получить растровое изображение
         {
             return bitmap;
         }
@@ -105,58 +105,39 @@ namespace _6th_LAB_OOP
 
     public class CCircle : CShape
     {
-        private Point center_point;
-        private int radius;
         private Designer designer;
 
         public CCircle(int x, int y, Designer designer, Color color) // Конструктор окружности 
         {
-            this.center_point.X = x;
-            this.center_point.Y = y;
+            this.x = x;
+            this.y = y;
             this.designer = designer;
             this.color = ColorTranslator.ToHtml(color);
-            radius = 33;
+            this.length = 35; // Радиус
         }
 
         public override void Draw()
         {
-            designer.DrawCircle(center_point.X, center_point.Y, radius, is_selected, ColorTranslator.FromHtml(color));
+            designer.DrawCircle(x, y, length, is_selected, ColorTranslator.FromHtml(color));
         }
 
         public override void ChangeSize(sbyte type)
         {
-            radius += (type == '+') ? (center_point.X + radius < designer.getWidth() &&
-                                        center_point.Y + radius < designer.getHeight() &&
-                                        center_point.X - radius > 0 &&
-                                        center_point.Y - radius > 0) ? 5 : 0 : (radius > 5) ? -5 : 0;
+            length += (type == '+') ? (canChange(0, 0, 5) ? 5 : 0) : (canChange(0, 0, -5) ? -5 : 0);
         }
 
         public override bool WasClicked(int x, int y)
         {
-            return ((this.center_point.X - x) * (this.center_point.X - x) + (this.center_point.Y - y) * (this.center_point.Y - y) <= radius * radius);
+            return ((this.x - x) * (this.x - x) + (this.y - y) * (this.y - y) <= length * length);
         }
 
-        public override void Move(sbyte direction)
+        public override bool canChange(int dx, int dy, int dlength)
         {
-            if (CanMove(direction))
-            {
-                this.center_point.X = designer.MoveFigure(this.center_point.X, this.center_point.Y, direction).X;
-                this.center_point.Y = designer.MoveFigure(this.center_point.X, this.center_point.Y, direction).Y;
-            }
-        }
-
-        public override bool CanMove(sbyte direction)
-        {
-            if (direction == 'u')
-                return center_point.Y - radius > 0;
-            else if (direction == 'd')
-                return center_point.Y + radius < designer.getHeight();
-            else if (direction == 'r')
-                return center_point.X + radius < designer.getWidth();
-            else if (direction == 'l')
-                return center_point.X - radius > 0;
-            else
-                return false;
+            return (x + dx + length + dlength < designer.getWidth() &&
+                    y + dy + length + dlength < designer.getHeight() &&
+                    x + dx - length - dlength > 0 &&
+                    y + dy - length - dlength > 0 &&
+                    length + dlength > 5);
         }
     }
 
@@ -164,20 +145,25 @@ namespace _6th_LAB_OOP
     {
         private Point[] points = new Point[3];
         private Designer designer;
-        private int height = 35;
 
         public CTriangle(int x, int y, Designer designer, Color color)
         {
-            points[0].X = x; points[0].Y = y - 35; // Верхняя точка
-            points[1].X = x - 35; points[1].Y = y + 25; // Левая точка
-            points[2].X = x + 35; points[2].Y = y + 25; // Правая точка
-
+            this.x = x; this.y = y;
             this.color = ColorTranslator.ToHtml(color);
             this.designer = designer;
+            this.length = 35; // Высота
+
+            points[0].X = x; points[0].Y = y - length;
+            points[1].X = x - length; points[1].Y = y + length / 2;
+            points[2].X = x + length; points[2].Y = y + length / 2;
         }
 
         public override void Draw()
         {
+            points[0].X = x; points[0].Y = y - length;
+            points[1].X = x - length; points[1].Y = y + length / 2;
+            points[2].X = x + length; points[2].Y = y + length / 2;
+
             designer.DrawTriangle(points, is_selected, ColorTranslator.FromHtml(color));
         }
 
@@ -189,71 +175,55 @@ namespace _6th_LAB_OOP
 
             return (a >= 0 && b >= 0 && c >= 0) || (a <= 0 && b <= 0 && c <= 0);
         }
-        public override void Move(sbyte direction)
+
+        public override bool canChange(int dx, int dy, int dlength)
         {
-            if (CanMove(direction))
-            {
-                if (direction == 'u')
-                {
-                    points[0].Y -= 5; points[1].Y -= 5; points[2].Y -= 5;
-                }
-                if (direction == 'd')
-                {
-                    points[0].Y += 5; points[1].Y += 5; points[2].Y += 5;
-                }
-                if (direction == 'l')
-                {
-                    points[0].X -= 5; points[1].X -= 5; points[2].X -= 5;
-                }
-                if (direction == 'r')
-                {
-                    points[0].X += 5; points[1].X += 5; points[2].X += 5;
-                }   
-            }
-        }
-
-
-
-        public override bool CanMove(sbyte direction)
-        {
-            if (direction == 'u')
-                return points[0].Y - 5 > 0;
-            else if (direction == 'd')
-                return points[2].Y + 5 < designer.getHeight();
-            else if (direction == 'r')
-                return points[2].X + 5 < designer.getWidth();
-            else if (direction == 'l')
-                return points[1].X - 5 > 0;
-            else
-                return false;
+            
+            return (y + dy - length - dlength > 0 &&
+                    y + length / 2 + dy + dlength / 2 < designer.getHeight() &&
+                    x + length + dx + dlength < designer.getWidth() &&
+                    x - length + dx - dlength > 0 &&
+                    length + dlength > 10);
         }
 
         public override void ChangeSize(sbyte type)
         {
-            if (type == '+' && !((points[0].Y - 5 > 0) && (points[2].Y + 5 < designer.getHeight()) &&
-                                (points[2].X + 5 < designer.getWidth()) && points[1].X - 5 > 0)) return; // Проверяем, можем ли мы вообще увеличится
-                
-            points[0].Y += (type == '+') ? -5 : (height > 10) ? 5 : 0; // На каждом шаге при type == '-' проверяем, можем ли мы вообще уменьшится
-            points[1].X += (type == '+') ? -5 : (height > 10) ? 5 : 0;
-            points[1].Y += (type == '+') ? 5 : (height > 10) ? -5 : 0;
-            points[2].X += (type == '+') ? 5 : (height > 10) ? -5 : 0;
-            points[2].Y += (type == '+') ? 5 : (height > 10) ? -5 : 0;
-            height += (type == '+') ? 5 : (height > 10) ? -5 : 0;
+            if (type == '+')
+            {
+                if (canChange(0, 0, 5))
+                {
+                    points[0].Y += -5;
+                    points[1].X += -5;
+                    points[1].Y += 5;
+                    points[2].X += 5;
+                    points[2].Y += 5;
+                    length += 5;
+                }
+            } else
+            {
+                if (canChange(0, 0, -5))
+                {
+                    points[0].Y += 5;
+                    points[1].X += 5;
+                    points[1].Y += -5;
+                    points[2].X += -5;
+                    points[2].Y += -5;
+                    length += -5;
+                }
+            }
         }
     }
 
     public class CSquare : CShape
     {
-        private Point center_point;
         private Point[] points = new Point[2];
         private Designer designer;
-        private int length;
 
         public CSquare(int x, int y, Designer designer, Color color)
         {
-            length = 50;
-
-            center_point = new Point(x, y);
+            this.length = 50;
+            this.x = x;
+            this.y = y;
 
             this.color = ColorTranslator.ToHtml(color);
 
@@ -267,50 +237,34 @@ namespace _6th_LAB_OOP
 
         public override void Draw()
         {
+            points[0].X = x - length / 2;
+            points[0].Y = y - length / 2;
+            points[1].X = x + length / 2;
+            points[1].Y = y + length / 2;
+
             designer.DrawSquare(points[0].X, points[0].Y, length, is_selected, ColorTranslator.FromHtml(color));
-        }
-
-        public override void Move(sbyte direction)
-        {
-            if (CanMove(direction))
-            {
-                center_point.X = designer.MoveFigure(center_point.X, center_point.Y, direction).X;
-                center_point.Y = designer.MoveFigure(center_point.X, center_point.Y, direction).Y;
-            }
-
-            points[0].X = center_point.X - length / 2;
-            points[0].Y = center_point.Y - length / 2;
-            points[1].X = center_point.X + length / 2;
-            points[1].Y = center_point.Y + length / 2;
-        }
-        public override bool CanMove(sbyte direction)
-        {
-            if (direction == 'u')
-                return center_point.Y - length / 2 - 5 > 0;
-            else if (direction == 'd')
-                return center_point.Y + length / 2 + 5 < designer.getHeight();
-            else if (direction == 'r')
-                return center_point.X + length / 2 + 5 < designer.getWidth();
-            else if (direction == 'l')
-                return center_point.X - length / 2 - 5 > 0;
-            else
-                return false;
         }
 
         public override void ChangeSize(sbyte type)
         {
-            length += (type == '+') ? (center_point.X + length / 2 + 5 < designer.getWidth() &&
-                                        center_point.Y + length / 2 + 5 < designer.getHeight() &&
-                                        center_point.X - length / 2 - 5 > 0 &&
-                                        center_point.Y - length / 2 - 5 > 0) ? 5 : 0 : (length > 5) ? -5 : 0;
-            
-            center_point.X = points[0].X + length / 2;
-            center_point.Y = points[0].Y + length / 2;
+            length += (type == '+' && canChange(0, 0, 5)) ? 5 : (type == '-' && canChange(0, 0, -5)) ? -5 : 0;
+
+            x = points[0].X + length / 2;
+            y = points[0].Y + length / 2;
+        }
+
+        public override bool canChange(int dx, int dy, int dlength)
+        {
+            return (x + length / 2 + dx + dlength / 2 < designer.getWidth() - 5 &&
+                    y + length / 2 + dy + dlength < designer.getHeight() - 5 &&
+                    x - length / 2 + dx - dlength > 5 &&
+                    y - length / 2 + dy - dlength > 5 &&
+                    length > 10);
         }
 
         public override bool WasClicked(int x, int y)
         {
-            return x >= center_point.X - length / 2 && y >= center_point.Y - length / 2 && x <= center_point.X + length / 2 && y <= center_point.Y + length / 2;
+            return x >= this.x - length / 2 && y >= this.y - length / 2 && x <= this.x + length / 2 && y <= this.y + length / 2;
         }
     }
 }

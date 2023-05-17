@@ -5,6 +5,8 @@ namespace StorageClassLibrary {
 	public ref class CShape {
 	protected:
 		bool is_selected;
+        int length;
+        int x, y;
 		String^ color;
 
 	public:
@@ -13,12 +15,12 @@ namespace StorageClassLibrary {
 		virtual void Unselect() { is_selected = false; }
 		virtual bool IsSelected() { return is_selected; }
 		virtual void ChangeColor(String^ color) { this->color = color; }
+        virtual void Move(int dx, int dy) { if (canChange(dx, dy, 0)) { x += dx; y += dy; } }
 
+        virtual bool canChange(int dx, int dy, int dlength) = 0;
 		virtual void ChangeSize(char type) = 0;
 		virtual bool WasClicked(int x, int y) = 0;
 		virtual void Draw() = 0;
-		virtual void Move(char direction) = 0;
-		virtual bool CanMove(char direction) = 0;
 	};
 
     public ref class Node
