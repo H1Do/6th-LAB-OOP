@@ -2,207 +2,180 @@
 using namespace System;
 
 namespace StorageClassLibrary {
-public ref class CShape {
-protected:
-	bool is_selected;
-	String^ color;
+	public ref class CShape {
+	protected:
+		bool is_selected;
+		String^ color;
 
-public:
-	~CShape() { }
-	virtual void Select() { is_selected = true; }
-	virtual void Unselect() { is_selected = false; }
-	virtual bool IsSelected() { return is_selected; }
-	virtual void ChangeColor(String^ color) { this->color = color; }
+	public:
+		~CShape() { }
+		virtual void Select() { is_selected = true; }
+		virtual void Unselect() { is_selected = false; }
+		virtual bool IsSelected() { return is_selected; }
+		virtual void ChangeColor(String^ color) { this->color = color; }
 
-	virtual void ChangeSize(char type) = 0;
-	virtual bool WasClicked(int x, int y) = 0;
-	virtual void Draw() = 0;
-	virtual void Move(char direction) = 0;
-	virtual bool CanMove(char direction) = 0;
-};
+		virtual void ChangeSize(char type) = 0;
+		virtual bool WasClicked(int x, int y) = 0;
+		virtual void Draw() = 0;
+		virtual void Move(char direction) = 0;
+		virtual bool CanMove(char direction) = 0;
+	};
 
-/*public ref class Node {
-public:
-    CShape^ data;
-    Node^ next;
-};
+    public ref class Node
+    {
+    public:
+        CShape^ shape;
+        Node^ next;
 
-public ref class Storage {
-private:
-    Node^ head;
-    Node^ current;
-
-public:
-    Storage() {
-        head = nullptr;
-        current = nullptr;
-    }
-
-    bool isEmpty() {
-        return head == nullptr;
-    }
-
-    void add(CShape^ shape) {
-        Node^ node = gcnew Node();
-        node->data = shape;
-        node->next = nullptr;
-
-        if (isEmpty()) {
-            head = node;
+        Node(CShape^ shape)
+        {
+            this->shape = shape;
+            this->next = nullptr;
         }
-        else {
-            Node^ current = head;
+    };
 
-            while (current->next != nullptr) {
+    public ref class List
+    {
+    private:
+        Node^ head;
+        Node^ tail;
+        int count;
+
+    public:
+        List()
+        {
+            this->head = nullptr;
+            this->tail = nullptr;
+            this->count = 0;
+        }
+
+        void Add(CShape^ shape)
+        {
+            Node^ newNode = gcnew Node(shape);
+
+            if (this->count == 0)
+            {
+                this->head = newNode;
+                this->tail = newNode;
+            }
+            else
+            {
+                this->tail->next = newNode;
+                this->tail = newNode;
+            }
+
+            this->count++;
+        }
+
+        void Remove(CShape^ shape)
+        {
+            Node^ current = this->head;
+            Node^ previous = nullptr;
+
+            while (current != nullptr)
+            {
+                if (current->shape == shape)
+                {
+                    if (previous != nullptr)
+                    {
+                        previous->next = current->next;
+
+                        if (current == this->tail)
+                        {
+                            this->tail = previous;
+                        }
+                    }
+                    else
+                    {
+                        this->head = current->next;
+
+                        if (current == this->tail)
+                        {
+                            this->tail = nullptr;
+                        }
+                    }
+
+                    this->count--;
+                    break;
+                }
+
+                previous = current;
+                current = current->next;
+            }
+        }
+
+        void RemoveAt(int index)
+        {
+            if (index < 0 || index >= this->count)
+            {
+                throw gcnew IndexOutOfRangeException();
+            }
+
+            Node^ current = this->head;
+            Node^ previous = nullptr;
+
+            for (int i = 0; i < index; i++)
+            {
+                previous = current;
                 current = current->next;
             }
 
-            current->next = node;
-        }
-    }
+            if (previous != nullptr)
+            {
+                previous->next = current->next;
 
-    void clear() {
-        while (!isEmpty()) {
-            removeCurrent();
-        }
-    }
+                if (current == this->tail)
+                {
+                    this->tail = previous;
+                }
+            }
+            else
+            {
+                this->head = current->next;
 
-    void first() {
-        current = head;
-    }
+                if (current == this->tail)
+                {
+                    this->tail = nullptr;
+                }
+            }
 
-    bool isLast() {
-        if (isEmpty() || current == nullptr) {
-            return false;
-        }
-
-        return current->next == nullptr;
-    }
-
-    void next() {
-        if (current != nullptr) {
-            current = current->next;
-        }
-    }
-
-    CShape^ getCurrent() {
-        if (current != nullptr) {
-            return current->data;
-        }
-        return nullptr;
-    }
-
-    void removeCurrent() {
-        if (isEmpty() || current == nullptr) {
-            return;
+            this->count--;
         }
 
-        if (current == head) {
-            head = head->next;
-            delete current;
-            current = head;
-            return;
+        void Clear()
+        {
+            this->head = nullptr;
+            this->tail = nullptr;
+            this->count = 0;
         }
 
-        Node^ prev = head;
-        while (prev != nullptr && prev->next != current) {
-            prev = prev->next;
+        int GetSize()
+        {
+            return this->count;
         }
 
-        if (prev == nullptr) {
-            return;
+        CShape^ Get(int index)
+        {
+            if (index < 0 || index >= this->count)
+            {
+                throw gcnew IndexOutOfRangeException();
+            }
+
+            Node^ current = this->head;
+            int currentIndex = 0;
+
+            while (current != nullptr)
+            {
+                if (currentIndex == index)
+                {
+                    return current->shape;
+                }
+
+                currentIndex++;
+                current = current->next;
+            }
+
+            return nullptr;
         }
-
-        prev->next = current->next;
-        delete current;
-        current = prev->next;
-    }
-};*/
-
-public ref class IList
-	{
-	public:
-		virtual void add(CShape^ obj) = 0;
-		virtual void del(CShape^ obj) = 0;
-		virtual CShape^ getObject() = 0;
-		virtual void first() = 0;
-		virtual void next() = 0;
-		virtual bool isEOL() = 0;
-	};
-
-	public ref class MyStorage : public IList {
-
-	protected:
-
-		array<CShape^>^ data;
-		int curr, size, count;
-
-		void resize() {
-
-			size++;
-
-			array<CShape^>^ tmp = gcnew array<CShape^>(size);
-
-			for (int i = 0; i < size - 1; i++)
-				tmp[i] = data[i];
-
-			data = tmp;
-		}
-
-	public:
-
-		MyStorage() {
-			curr = 0; size = 0; count = 0;
-			data = gcnew array<CShape^>(size);
-		}
-
-		void add(CShape^ obj) override {
-
-			if (this->isEOL())
-			{
-				if (count < curr) {
-					for (int i = 0; i < size; i++)
-						if (data[i] == nullptr) {
-							data[i] = obj;
-							count++;
-							return;
-						}
-				}
-
-				this->resize();
-			}
-
-			while (data[curr] != nullptr) {
-				curr++;
-				if (this->isEOL())
-					this->resize();
-			}
-
-			data[curr] = obj;
-			curr++;
-			count++;
-		}
-
-		void del(CShape^ obj) override {
-			delete obj;
-			data[curr] = nullptr;
-			count--;
-		}
-
-		CShape^ getObject() override {
-			return data[curr];
-		}
-
-		void first() override {
-			curr = 0;
-		}
-
-		void next() override {
-			curr++;
-		}
-
-		bool isEOL() override {
-			return curr > size - 1;
-		}
-	};
+    };
 }

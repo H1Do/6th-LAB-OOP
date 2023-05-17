@@ -15,7 +15,7 @@ namespace _6th_LAB_OOP
 {
     public partial class Form1 : Form
     {
-        private MyStorage shapes;
+        private List shapes;
         private Designer designer;
         private Color current_color = Color.White;
         private String current_shape;
@@ -25,51 +25,17 @@ namespace _6th_LAB_OOP
         public Form1()
         {
             InitializeComponent();
-            shapes = new MyStorage();
+            shapes = new List();
             designer = new Designer(pictureBox.Width, pictureBox.Height);
             this.MouseWheel += new MouseEventHandler(this_MouseWheel); // Изменение размера фигуры вращением колёсика
-            this.MouseWheel += new MouseEventHandler(shapesComboBox_MouseWheel);
+            this.MouseWheel += new MouseEventHandler(shapesComboBox_MouseWheel); // Запрещаем управление comboBox с помощью колеса
             shapesComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList; // Запрещаем ввод своих значений в combobox
-
         }
 
         private void Form1_MouseWheel(object sender, MouseEventArgs e)
         {
             throw new NotImplementedException();
         }
-
-        /*private void NewCircle(int x, int y)
-        {
-            designer.UnselectAll(shapes);
-            designer.DrawAll(shapes);
-
-            CCircle circle = new CCircle(x, y, designer, current_color);
-            circle.Draw();
-            pictureBox.Image = designer.GetBitmap();
-            shapes.add(circle);
-        }
-
-        private void NewTriangle(int x, int y)
-        {
-            designer.UnselectAll(shapes);
-            designer.DrawAll(shapes);
-
-            CTriangle triangle = new CTriangle(x, y, designer);
-            triangle.Draw();
-            pictureBox.Image = designer.GetBitmap();
-            shapes.add(triangle);
-        }
-
-        private void NewSquare(int x, int y)
-        {
-            designer.UnselectAll(shapes);
-            designer.DrawAll(shapes);
-
-            CSquare square = new CSquare(x, y, designer);
-            square.Draw();
-            pictureBox.Image = designer.GetBitmap();
-            shapes.add(square);
-        }*/
 
         private void Form1_Paint(object sender, PaintEventArgs e)
         {
@@ -97,7 +63,7 @@ namespace _6th_LAB_OOP
 
             new_obj.Draw();
             pictureBox.Image = designer.GetBitmap();
-            shapes.add(new_obj);
+            shapes.Add(new_obj);
         }
 
         private void pictureBox_MouseUp(object sender, MouseEventArgs e)
@@ -105,15 +71,14 @@ namespace _6th_LAB_OOP
             designer.Clear();
             bool was_clicked = false;
 
-            for (shapes.first(); !shapes.isEOL(); shapes.next())
-                if (shapes.getObject() is CShape shape)
-                    if (shape.WasClicked(e.X, e.Y))
-                    {
-                        was_clicked = true;
-                        if (!is_ctrl_pressed)
-                            designer.UnselectAll(shapes);
-                        shape.Select();
-                    }
+            for (int i = 0; i < shapes.GetSize(); i++)
+                if (shapes.Get(i).WasClicked(e.X, e.Y))
+                {
+                    was_clicked = true;
+                    if (!is_ctrl_pressed)
+                        designer.UnselectAll(shapes);
+                    shapes.Get(i).Select();
+                }
                         
             if (!was_clicked)
             {
@@ -134,35 +99,33 @@ namespace _6th_LAB_OOP
                 case Keys.ControlKey: // Если это CTRL, то мы это запоминаем и выходим
                     is_ctrl_pressed = true;
                     break;
-                case Keys.Delete: // Если это DEL, то мы удаляем все выделенные элементы 
-                    for (shapes.first(); !shapes.isEOL(); shapes.next())
-                        if (shapes.getObject() is CShape shape)
-                            if (shape.IsSelected())
-                                shapes.del(shape);
+                case Keys.Delete: // Если это DEL, то мы удаляем все выделенные элементы
+                    List order_to_delete = new List();
+                    for (int i = 0; i < shapes.GetSize(); i++)
+                        if (shapes.Get(i).IsSelected())
+                            order_to_delete.Add(shapes.Get(i));
+                    for (int i = 0; i < order_to_delete.GetSize(); i++)
+                        shapes.Remove(order_to_delete.Get(i));
                     break;
                 case Keys.Up: // Если это Up, то все выделенные фигуры движутся наверх
-                    for (shapes.first(); !shapes.isEOL(); shapes.next())
-                        if (shapes.getObject() is CShape shape)
-                            if (shape.IsSelected())
-                                shape.Move((sbyte)'u');
+                    for (int i = 0; i < shapes.GetSize(); i++)
+                        if (shapes.Get(i).IsSelected())
+                            shapes.Get(i).Move((sbyte)'u');
                     break;
                 case Keys.Down: // Если это Down, то все выделенные фигуры движутся вниз
-                    for (shapes.first(); !shapes.isEOL(); shapes.next())
-                        if (shapes.getObject() is CShape shape)
-                            if (shape.IsSelected())
-                                shape.Move((sbyte)'d');
+                    for (int i = 0; i < shapes.GetSize(); i++)
+                        if (shapes.Get(i).IsSelected())
+                            shapes.Get(i).Move((sbyte)'d');
                     break;
                 case Keys.Left: // Если это Left, то все выделенные фигуры движутся влево
-                    for (shapes.first(); !shapes.isEOL(); shapes.next())
-                        if (shapes.getObject() is CShape shape)
-                            if (shape.IsSelected())
-                                shape.Move((sbyte)'l');
+                    for (int i = 0; i < shapes.GetSize(); i++)
+                        if (shapes.Get(i).IsSelected())
+                            shapes.Get(i).Move((sbyte)'l');
                     break;
                 case Keys.Right: // Если это Right, то все выделенные фигуры движутся вправо
-                    for (shapes.first(); !shapes.isEOL(); shapes.next())
-                        if (shapes.getObject() is CShape shape)
-                            if (shape.IsSelected())
-                                shape.Move((sbyte)'r');
+                    for (int i = 0; i < shapes.GetSize(); i++)
+                        if (shapes.Get(i).IsSelected())
+                            shapes.Get(i).Move((sbyte)'r');
                     break; 
             }
 
@@ -183,17 +146,15 @@ namespace _6th_LAB_OOP
             {
                 if (e.Delta < 0) // Уменьшаем все фигуры
                 {
-                    for (shapes.first(); !shapes.isEOL(); shapes.next())
-                        if (shapes.getObject() is CShape shape)
-                            if (shape.IsSelected())
-                                shape.ChangeSize((sbyte)'+');
+                    for (int i = 0; i < shapes.GetSize(); i++)
+                        if (shapes.Get(i).IsSelected())
+                            shapes.Get(i).ChangeSize((sbyte)'+');
                 }
                 else // Увеличиваем все фигуры
                 {
-                    for (shapes.first(); !shapes.isEOL(); shapes.next())
-                        if (shapes.getObject() is CShape shape)
-                            if (shape.IsSelected())
-                                shape.ChangeSize((sbyte)'-');
+                    for (int i = 0; i < shapes.GetSize(); i++)
+                        if (shapes.Get(i).IsSelected())
+                            shapes.Get(i).ChangeSize((sbyte)'-');
                 }
             }
             designer.Clear(); // Очищаем изображение, отрисовываем все окружности и передаём изобажение pictureBox'у
@@ -210,12 +171,15 @@ namespace _6th_LAB_OOP
                 current_color = clr_dialog.Color; // Запоминаем для появляющихся фигур
             }
              
-            chosedShare.ForeColor = current_color; 
+            chosedShare.ForeColor = current_color;
 
-            for (shapes.first(); !shapes.isEOL(); shapes.next()) // Перекрашиваем выделенные
-                if (shapes.getObject() is CShape shape)
-                    if (shape.IsSelected())
-                        shape.ChangeColor(current_color.ToString());
+            for (int i = 0; i < shapes.GetSize(); i++)
+                if (shapes.Get(i).IsSelected())
+                    shapes.Get(i).ChangeColor(ColorTranslator.ToHtml(current_color));
+
+            designer.Clear(); // Очищаем изображение, отрисовываем все окружности и передаём изобажение pictureBox'у
+            designer.DrawAll(shapes);
+            pictureBox.Image = designer.GetBitmap();
         }
 
         private void shapesComboBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -227,11 +191,11 @@ namespace _6th_LAB_OOP
 
         private void shapesComboBox_KeyDown(object sender, KeyEventArgs e)
         {
-            if ((e.KeyCode == Keys.Down) || (e.KeyCode == Keys.Up) || (e.KeyCode == Keys.Right) || (e.KeyCode == Keys.Left))
+            if ((e.KeyCode == Keys.Down) || (e.KeyCode == Keys.Up) || (e.KeyCode == Keys.Right) || (e.KeyCode == Keys.Left)) // Запрещаем shapesComboBox изменять выбранное значение с помощью стрелок на клавиатуре
                 e.Handled = true;
         }
 
-        private void shapesComboBox_MouseWheel(object sender, MouseEventArgs e)
+        private void shapesComboBox_MouseWheel(object sender, MouseEventArgs e) // Запрещаем shapesComboBox изменять выбранное значение с помощью колеса мыши
         {
             if ((e.Delta > 0) || e.Delta < 0)
                 ((HandledMouseEventArgs)e).Handled = true;

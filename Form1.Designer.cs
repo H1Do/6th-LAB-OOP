@@ -59,7 +59,7 @@
             // 
             this.chosedShare.AutoSize = true;
             this.chosedShare.Font = new System.Drawing.Font("Microsoft Sans Serif", 27.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.chosedShare.Location = new System.Drawing.Point(295, 482);
+            this.chosedShare.Location = new System.Drawing.Point(200, 485);
             this.chosedShare.Name = "chosedShare";
             this.chosedShare.Size = new System.Drawing.Size(0, 42);
             this.chosedShare.TabIndex = 4;

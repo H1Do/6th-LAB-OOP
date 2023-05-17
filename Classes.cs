@@ -76,16 +76,16 @@ namespace _6th_LAB_OOP
             g.DrawLine(((is_selected) ? redPen : current_color_pen), point1, point2);
         }
 
-        public void DrawAll(MyStorage storage) // Отрисовать всех фигуры
+        public void DrawAll(List storage) // Отрисовать всех фигуры
         {
-            for (storage.first(); !storage.isEOL(); storage.next())
-                storage.getObject().Draw();
+            for (int i = 0; i < storage.GetSize(); i++)
+                storage.Get(i).Draw();
         }
 
-        public void UnselectAll(MyStorage storage) // Убираем подчеркивание со всех окружностей
+        public void UnselectAll(List storage) // Убираем подчеркивание со всех окружностей
         {
-            for (storage.first(); !storage.isEOL(); storage.next())
-                storage.getObject().Unselect();
+            for (int i = 0; i < storage.GetSize(); i++)
+                storage.Get(i).Unselect();
         }
 
         public Point MoveFigure(int x, int y, sbyte direction) // Перемещение фигуры
@@ -114,13 +114,13 @@ namespace _6th_LAB_OOP
             this.center_point.X = x;
             this.center_point.Y = y;
             this.designer = designer;
-            this.color = color.ToString();
+            this.color = ColorTranslator.ToHtml(color);
             radius = 33;
         }
 
         public override void Draw()
         {
-            designer.DrawCircle(center_point.X, center_point.Y, radius, is_selected, Color.FromName(color));
+            designer.DrawCircle(center_point.X, center_point.Y, radius, is_selected, ColorTranslator.FromHtml(color));
         }
 
         public override void ChangeSize(sbyte type)
@@ -172,13 +172,13 @@ namespace _6th_LAB_OOP
             points[1].X = x - 35; points[1].Y = y + 25; // Левая точка
             points[2].X = x + 35; points[2].Y = y + 25; // Правая точка
 
-            this.color = color.ToString();
+            this.color = ColorTranslator.ToHtml(color);
             this.designer = designer;
         }
 
         public override void Draw()
         {
-            designer.DrawTriangle(points, is_selected, Color.FromName(color));
+            designer.DrawTriangle(points, is_selected, ColorTranslator.FromHtml(color));
         }
 
         public override bool WasClicked(int x, int y)
@@ -211,6 +211,8 @@ namespace _6th_LAB_OOP
                 }   
             }
         }
+
+
 
         public override bool CanMove(sbyte direction)
         {
@@ -253,7 +255,7 @@ namespace _6th_LAB_OOP
 
             center_point = new Point(x, y);
 
-            this.color = color.ToString();
+            this.color = ColorTranslator.ToHtml(color);
 
             points[0].X = x - length / 2;
             points[0].Y = y - length / 2;
@@ -265,7 +267,7 @@ namespace _6th_LAB_OOP
 
         public override void Draw()
         {
-            designer.DrawSquare(points[0].X, points[0].Y, length, is_selected, Color.FromName(color));
+            designer.DrawSquare(points[0].X, points[0].Y, length, is_selected, ColorTranslator.FromHtml(color));
         }
 
         public override void Move(sbyte direction)
